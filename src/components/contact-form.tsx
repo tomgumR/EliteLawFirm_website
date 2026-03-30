@@ -1,17 +1,17 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import type { FormEvent } from "react";
+import { useState } from "react";
+import { Send } from "lucide-react";
 
-type FormValues = {
+type FormState = {
   name: string;
   email: string;
   phone: string;
   message: string;
 };
 
-type FormErrors = Partial<Record<keyof FormValues, string>>;
-
-const initialValues: FormValues = {
+const initialFormState: FormState = {
   name: "",
   email: "",
   phone: "",
@@ -19,159 +19,141 @@ const initialValues: FormValues = {
 };
 
 export function ContactForm() {
-  const [values, setValues] = useState<FormValues>(initialValues);
-  const [errors, setErrors] = useState<FormErrors>({});
-  const [status, setStatus] = useState<"idle" | "success">("idle");
-
-  function validate(currentValues: FormValues) {
-    const nextErrors: FormErrors = {};
-
-    if (!currentValues.name.trim()) {
-      nextErrors.name = "Please enter your name.";
-    }
-
-    if (!currentValues.email.trim()) {
-      nextErrors.email = "Please enter your email address.";
-    } else if (!/\S+@\S+\.\S+/.test(currentValues.email)) {
-      nextErrors.email = "Please enter a valid email address.";
-    }
-
-    if (!currentValues.phone.trim()) {
-      nextErrors.phone = "Please enter your phone number.";
-    }
-
-    if (!currentValues.message.trim()) {
-      nextErrors.message = "Please tell us how we can help.";
-    } else if (currentValues.message.trim().length < 20) {
-      nextErrors.message = "Please provide a little more detail.";
-    }
-
-    return nextErrors;
-  }
+  const [formData, setFormData] = useState<FormState>(initialFormState);
+  const [formError, setFormError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const nextErrors = validate(values);
 
-    setErrors(nextErrors);
-
-    if (Object.keys(nextErrors).length > 0) {
-      setStatus("idle");
+    if (
+      !formData.name.trim() ||
+      !formData.email.trim() ||
+      !formData.phone.trim() ||
+      !formData.message.trim()
+    ) {
+      setFormError("Please fill in all fields before submitting.");
+      setIsSubmitted(false);
       return;
     }
 
-    setStatus("success");
-    setValues(initialValues);
+    setFormError("");
+    setIsSubmitting(true);
+
+    window.setTimeout(() => {
+      setIsSubmitting(false);
+      setIsSubmitted(true);
+      setFormData(initialFormState);
+    }, 1400);
   }
 
   return (
-    <form className="space-y-5" noValidate onSubmit={handleSubmit}>
-      <Field
+    <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+      <FormField
         id="name"
-        label="Name"
-        value={values.name}
-        error={errors.name}
+        label="Your Name *"
+        value={formData.name}
         onChange={(value) => {
-          setValues((current) => ({ ...current, name: value }));
-          setErrors((current) => ({ ...current, name: undefined }));
+          setFormData((current) => ({ ...current, name: value }));
+          setFormError("");
         }}
+        placeholder="Enter your full name"
       />
-      <Field
+      <FormField
         id="email"
-        label="Email"
         type="email"
-        value={values.email}
-        error={errors.email}
+        label="Email Address *"
+        value={formData.email}
         onChange={(value) => {
-          setValues((current) => ({ ...current, email: value }));
-          setErrors((current) => ({ ...current, email: undefined }));
+          setFormData((current) => ({ ...current, email: value }));
+          setFormError("");
         }}
+        placeholder="your.email@example.com"
       />
-      <Field
+      <FormField
         id="phone"
-        label="Phone"
         type="tel"
-        value={values.phone}
-        error={errors.phone}
+        label="Phone Number *"
+        value={formData.phone}
         onChange={(value) => {
-          setValues((current) => ({ ...current, phone: value }));
-          setErrors((current) => ({ ...current, phone: undefined }));
+          setFormData((current) => ({ ...current, phone: value }));
+          setFormError("");
         }}
+        placeholder="Enter your phone number"
       />
+
       <label className="block">
-        <span className="mb-2 block text-sm font-medium text-[color:var(--color-ink)]">
-          Message
+        <span className="mb-2 block text-sm font-semibold text-[color:var(--navy-primary)]">
+          Message *
         </span>
         <textarea
           id="message"
-          rows={5}
-          value={values.message}
+          value={formData.message}
           onChange={(event) => {
-            setValues((current) => ({
+            setFormData((current) => ({
               ...current,
               message: event.target.value,
             }));
-            setErrors((current) => ({ ...current, message: undefined }));
+            setFormError("");
           }}
-          className="w-full rounded-[1.2rem] border border-[color:var(--color-border)] bg-[color:var(--color-panel)] px-4 py-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-[color:var(--color-gold-deep)] focus:ring-4 focus:ring-[color:rgba(201,162,39,0.16)]"
-          placeholder="Briefly describe your legal matter"
-          aria-invalid={Boolean(errors.message)}
-          aria-describedby={errors.message ? "message-error" : undefined}
+          rows={5}
+          placeholder="Tell us about your legal issue..."
+          className="w-full resize-y rounded-lg border-2 border-slate-200 bg-white px-4 py-3 text-base text-slate-900 outline-none transition focus:border-[color:var(--navy-gold)] focus:shadow-[0_0_0_3px_rgba(212,175,55,0.1)]"
         />
-        {errors.message ? (
-          <span id="message-error" className="mt-2 block text-sm text-rose-600">
-            {errors.message}
-          </span>
-        ) : null}
       </label>
 
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <button
-          type="submit"
-          className="inline-flex items-center justify-center rounded-full bg-[color:var(--color-navy)] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[color:var(--color-navy-deep)]"
-        >
-          Submit
-        </button>
-        <p className="text-xs leading-6 text-slate-500">
-          This form is currently in preview mode and ready for backend
-          connection.
-        </p>
-      </div>
-
-      {status === "success" ? (
-        <div
-          className="rounded-[1.3rem] border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700"
-          role="status"
-        >
-          Thank you. Your consultation request has been prepared successfully.
+      {formError ? (
+        <div className="rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+          {formError}
         </div>
       ) : null}
+
+      {isSubmitted ? (
+        <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+          Thank you. We&apos;ll get back to you soon.
+        </div>
+      ) : null}
+
+      <button
+        type="submit"
+        disabled={isSubmitting}
+        className="cta-button inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[color:var(--navy-gold)] px-8 py-4 text-lg font-bold text-[color:var(--navy-primary)] disabled:cursor-not-allowed disabled:opacity-70"
+      >
+        {isSubmitting ? (
+          <>
+            <span className="loading-spinner" />
+            Sending...
+          </>
+        ) : (
+          <>
+            Send Message
+            <Send className="h-5 w-5" />
+          </>
+        )}
+      </button>
     </form>
   );
 }
 
-type FieldProps = {
-  error?: string;
-  id: keyof Omit<FormValues, "message">;
-  label: string;
-  onChange: (value: string) => void;
-  type?: string;
-  value: string;
-};
-
-function Field({
-  error,
+function FormField({
   id,
   label,
   onChange,
+  placeholder,
   type = "text",
   value,
-}: FieldProps) {
-  const errorId = `${id}-error`;
-
+}: {
+  id: string;
+  label: string;
+  onChange: (value: string) => void;
+  placeholder: string;
+  type?: string;
+  value: string;
+}) {
   return (
     <label className="block">
-      <span className="mb-2 block text-sm font-medium text-[color:var(--color-ink)]">
+      <span className="mb-2 block text-sm font-semibold text-[color:var(--navy-primary)]">
         {label}
       </span>
       <input
@@ -179,16 +161,9 @@ function Field({
         type={type}
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        className="w-full rounded-[1.2rem] border border-[color:var(--color-border)] bg-[color:var(--color-panel)] px-4 py-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-[color:var(--color-gold-deep)] focus:ring-4 focus:ring-[color:rgba(201,162,39,0.16)]"
-        placeholder={`Enter your ${label.toLowerCase()}`}
-        aria-invalid={Boolean(error)}
-        aria-describedby={error ? errorId : undefined}
+        placeholder={placeholder}
+        className="w-full rounded-lg border-2 border-slate-200 bg-white px-4 py-3 text-base text-slate-900 outline-none transition focus:border-[color:var(--navy-gold)] focus:shadow-[0_0_0_3px_rgba(212,175,55,0.1)]"
       />
-      {error ? (
-        <span id={errorId} className="mt-2 block text-sm text-rose-600">
-          {error}
-        </span>
-      ) : null}
     </label>
   );
 }

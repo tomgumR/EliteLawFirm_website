@@ -1,6 +1,4 @@
-"use client";
-
-import { FormEvent, useEffect, useState } from "react";
+import type { ReactNode } from "react";
 import Image from "next/image";
 import {
   ArrowRight,
@@ -8,26 +6,25 @@ import {
   BookOpen,
   Briefcase,
   Building2,
+  Camera,
   Clock,
   DollarSign,
   Gavel,
   Home,
-  Camera,
   Key,
   Landmark,
   Mail,
   MapPin,
-  Menu,
   MessageCircle,
   Phone,
   Scale,
   ScrollText,
-  Send,
   Shield,
   UserRound,
   Users,
-  X,
 } from "lucide-react";
+import { ContactForm } from "@/components/contact-form";
+import { SiteHeader } from "@/components/site-header";
 
 const navItems = [
   { label: "About", target: "about" },
@@ -132,161 +129,10 @@ const socialLinks = [
   },
 ];
 
-type FormState = {
-  name: string;
-  email: string;
-  phone: string;
-  message: string;
-};
-
-const initialFormState: FormState = {
-  name: "",
-  email: "",
-  phone: "",
-  message: "",
-};
-
 export default function HomePage() {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [formData, setFormData] = useState<FormState>(initialFormState);
-  const [formError, setFormError] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-
-    handleScroll();
-    window.addEventListener("scroll", handleScroll);
-
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  function scrollToSection(id: string) {
-    const element = document.getElementById(id);
-
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth", block: "start" });
-      setIsMobileMenuOpen(false);
-    }
-  }
-
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    if (
-      !formData.name.trim() ||
-      !formData.email.trim() ||
-      !formData.phone.trim() ||
-      !formData.message.trim()
-    ) {
-      setFormError("Please fill in all fields before submitting.");
-      setIsSubmitted(false);
-      return;
-    }
-
-    setFormError("");
-    setIsSubmitting(true);
-
-    window.setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSubmitted(true);
-      setFormData(initialFormState);
-    }, 1400);
-  }
-
   return (
     <main className="min-h-screen bg-white text-slate-900">
-      <header
-        className="fixed inset-x-0 top-0 z-50 border-b border-white/10 transition-all duration-300"
-        style={{
-          backgroundColor: isScrolled
-            ? "rgba(15, 31, 58, 0.95)"
-            : "rgba(30, 58, 95, 0.98)",
-          backdropFilter: isScrolled ? "blur(10px)" : "none",
-          boxShadow: isScrolled ? "0 4px 12px rgba(0, 0, 0, 0.1)" : "none",
-        }}
-      >
-        <div className="header-content mx-auto flex max-w-[1400px] items-center justify-between px-6 py-4 lg:px-8">
-          <button
-            type="button"
-            onClick={() => scrollToSection("hero")}
-            className="flex items-center gap-3 text-left"
-          >
-            <span className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-xl bg-white shadow-[0_8px_20px_rgba(0,0,0,0.18)]">
-              <Image
-                src="/Elite_official_logo.jpeg"
-                alt="Elite Legal Consultancy logo"
-                width={92}
-                height={92}
-                className="h-[4.8rem] w-[4.8rem] max-w-none object-cover object-center scale-[1.18]"
-                priority
-              />
-            </span>
-            <span className="hidden sm:block">
-              <span className="block text-xl font-bold tracking-[0.03em] text-white">
-                ELITE LEGAL CONSULTANCY
-              </span>
-            </span>
-          </button>
-
-          <nav className="hidden items-center gap-8 md:flex">
-            {navItems.map((item) => (
-              <button
-                key={item.target}
-                type="button"
-                onClick={() => scrollToSection(item.target)}
-                className="text-base font-medium text-white transition hover:text-[color:var(--navy-gold)]"
-              >
-                {item.label}
-              </button>
-            ))}
-            <button
-              type="button"
-              onClick={() => scrollToSection("contact")}
-              className="cta-button rounded-md bg-[color:var(--navy-gold)] px-6 py-3 text-sm font-semibold text-[color:var(--navy-primary)]"
-            >
-              Get Consultation
-            </button>
-          </nav>
-
-          <button
-            type="button"
-            onClick={() => setIsMobileMenuOpen((current) => !current)}
-            className="rounded-md p-2 text-white md:hidden"
-            aria-label="Toggle mobile navigation"
-          >
-            {isMobileMenuOpen ? <X className="h-7 w-7" /> : <Menu className="h-7 w-7" />}
-          </button>
-        </div>
-
-        {isMobileMenuOpen ? (
-          <div className="border-t border-white/10 bg-[color:var(--navy-dark)] px-6 py-5 md:hidden">
-            <div className="flex flex-col gap-3">
-              {navItems.map((item) => (
-                <button
-                  key={item.target}
-                  type="button"
-                  onClick={() => scrollToSection(item.target)}
-                  className="border-b border-white/10 py-3 text-left text-lg font-medium text-white"
-                >
-                  {item.label}
-                </button>
-              ))}
-              <button
-                type="button"
-                onClick={() => scrollToSection("contact")}
-                className="mt-3 rounded-md bg-[color:var(--navy-gold)] px-5 py-3 text-sm font-semibold text-[color:var(--navy-primary)]"
-              >
-                Get Consultation
-              </button>
-            </div>
-          </div>
-        ) : null}
-      </header>
+      <SiteHeader navItems={navItems} />
 
       <section
         id="hero"
@@ -319,21 +165,19 @@ export default function HomePage() {
               your long-term interests in view.
             </p>
             <div className="hero-cta mt-10 flex flex-wrap justify-center gap-4">
-              <button
-                type="button"
-                onClick={() => scrollToSection("contact")}
+              <a
+                href="#contact"
                 className="cta-button inline-flex items-center gap-2 rounded-lg bg-[color:var(--navy-gold)] px-8 py-4 text-lg font-bold text-[color:var(--navy-primary)]"
               >
                 Get a Consultation
                 <ArrowRight className="h-5 w-5" />
-              </button>
-              <button
-                type="button"
-                onClick={() => scrollToSection("services")}
+              </a>
+              <a
+                href="#services"
                 className="rounded-lg border-2 border-white px-8 py-4 text-lg font-bold text-white transition hover:bg-white/10"
               >
                 Our Services
-              </button>
+              </a>
             </div>
           </div>
 
@@ -547,91 +391,7 @@ export default function HomePage() {
               <h3 className="text-3xl font-bold text-[color:var(--navy-primary)]">
                 Send us a Message
               </h3>
-
-              <form onSubmit={handleSubmit} className="mt-8 space-y-6">
-                <FormField
-                  id="name"
-                  label="Your Name *"
-                  value={formData.name}
-                  onChange={(value) => {
-                    setFormData((current) => ({ ...current, name: value }));
-                    setFormError("");
-                  }}
-                  placeholder="Enter your full name"
-                />
-                <FormField
-                  id="email"
-                  type="email"
-                  label="Email Address *"
-                  value={formData.email}
-                  onChange={(value) => {
-                    setFormData((current) => ({ ...current, email: value }));
-                    setFormError("");
-                  }}
-                  placeholder="your.email@example.com"
-                />
-                <FormField
-                  id="phone"
-                  type="tel"
-                  label="Phone Number *"
-                  value={formData.phone}
-                  onChange={(value) => {
-                    setFormData((current) => ({ ...current, phone: value }));
-                    setFormError("");
-                  }}
-                  placeholder="Enter your phone number"
-                />
-
-                <label className="block">
-                  <span className="mb-2 block text-sm font-semibold text-[color:var(--navy-primary)]">
-                    Message *
-                  </span>
-                  <textarea
-                    id="message"
-                    value={formData.message}
-                    onChange={(event) => {
-                      setFormData((current) => ({
-                        ...current,
-                        message: event.target.value,
-                      }));
-                      setFormError("");
-                    }}
-                    rows={5}
-                    placeholder="Tell us about your legal issue..."
-                    className="w-full resize-y rounded-lg border-2 border-slate-200 bg-white px-4 py-3 text-base text-slate-900 outline-none transition focus:border-[color:var(--navy-gold)] focus:shadow-[0_0_0_3px_rgba(212,175,55,0.1)]"
-                  />
-                </label>
-
-                {formError ? (
-                  <div className="rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
-                    {formError}
-                  </div>
-                ) : null}
-
-                {isSubmitted ? (
-                  <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
-                    Thank you. We&apos;ll get back to you soon.
-                  </div>
-                ) : null}
-
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="cta-button inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[color:var(--navy-gold)] px-8 py-4 text-lg font-bold text-[color:var(--navy-primary)] disabled:cursor-not-allowed disabled:opacity-70"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <span className="loading-spinner" />
-                      Sending...
-                    </>
-                  ) : (
-                    <>
-                      Send Message
-                      <Send className="h-5 w-5" />
-                    </>
-                  )}
-                </button>
-              </form>
+              <ContactForm />
             </div>
           </div>
 
@@ -709,14 +469,13 @@ export default function HomePage() {
               </h4>
               <div className="mt-6 flex flex-col gap-3">
                 {navItems.map((item) => (
-                  <button
+                  <a
                     key={item.target}
-                    type="button"
-                    onClick={() => scrollToSection(item.target)}
+                    href={`#${item.target}`}
                     className="text-left text-base text-slate-300 transition hover:text-[color:var(--navy-gold)]"
                   >
                     {item.label}
-                  </button>
+                  </a>
                 ))}
               </div>
             </div>
@@ -758,7 +517,7 @@ function ContactCard({
 }: {
   icon: typeof MapPin;
   title: string;
-  content: React.ReactNode;
+  content: ReactNode;
 }) {
   return (
     <div className="flex gap-5 rounded-xl border border-slate-200 bg-[color:var(--surface-soft)] p-6">
@@ -774,37 +533,5 @@ function ContactCard({
         </div>
       </div>
     </div>
-  );
-}
-
-function FormField({
-  id,
-  label,
-  onChange,
-  placeholder,
-  type = "text",
-  value,
-}: {
-  id: string;
-  label: string;
-  onChange: (value: string) => void;
-  placeholder: string;
-  type?: string;
-  value: string;
-}) {
-  return (
-    <label className="block">
-      <span className="mb-2 block text-sm font-semibold text-[color:var(--navy-primary)]">
-        {label}
-      </span>
-      <input
-        id={id}
-        type={type}
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        placeholder={placeholder}
-        className="w-full rounded-lg border-2 border-slate-200 bg-white px-4 py-3 text-base text-slate-900 outline-none transition focus:border-[color:var(--navy-gold)] focus:shadow-[0_0_0_3px_rgba(212,175,55,0.1)]"
-      />
-    </label>
   );
 }
