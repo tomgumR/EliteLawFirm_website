@@ -87,25 +87,25 @@ const services = [
 const lawyers = [
   {
     name: "TC Zothansanga",
-    registration: "Reg: 202/2021",
+    registration: "Enrollment No: --",
     phone: "8414917465",
     bio: "Experienced legal professional specializing in comprehensive legal advocacy and client-focused solutions.",
   },
   {
     name: "K. Lalnunpuii",
-    registration: "Reg: 250/2022",
+    registration: "Enrollment No: --",
     phone: "9774069878",
     bio: "Dedicated advocate with expertise in civil litigation and consumer rights protection.",
   },
   {
     name: "Anchal Thapa",
-    registration: "Reg: 252/2022",
+    registration: "Enrollment No: --",
     phone: "9089163091",
     bio: "Skilled legal consultant committed to delivering personalized and result-driven counsel.",
   },
   {
     name: "R. Malsawmhlui",
-    registration: "Reg: 601/2022",
+    registration: "Enrollment No: --",
     phone: "8414011731",
     bio: "Professional advocate with a strong focus on property and probate litigation matters.",
   },
