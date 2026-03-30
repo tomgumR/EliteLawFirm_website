@@ -24,6 +24,7 @@ import {
   Users,
 } from "lucide-react";
 import { ContactForm } from "@/components/contact-form";
+import { MapEmbed } from "@/components/map-embed";
 import { SiteHeader } from "@/components/site-header";
 
 const navItems = [
@@ -200,7 +201,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="about" className="bg-[color:var(--surface-soft)] px-6 py-24 lg:px-8">
+      <section
+        id="about"
+        className="deferred-section bg-[color:var(--surface-soft)] px-6 py-24 lg:px-8"
+      >
         <div className="scroll-reveal visible mx-auto max-w-[1200px]">
           <div className="mb-16 text-center">
             <h2 className="section-heading inline-block">About Us</h2>
@@ -241,7 +245,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="services" className="bg-white px-6 py-24 lg:px-8">
+      <section id="services" className="deferred-section bg-white px-6 py-24 lg:px-8">
         <div className="scroll-reveal visible mx-auto max-w-[1400px]">
           <div className="mb-16 text-center">
             <h2 className="section-heading inline-block">Our Services</h2>
@@ -272,7 +276,7 @@ export default function HomePage() {
 
       <section
         id="lawyers"
-        className="bg-[color:var(--surface-soft)] px-6 py-24 lg:px-8"
+        className="deferred-section bg-[color:var(--surface-soft)] px-6 py-24 lg:px-8"
       >
         <div className="scroll-reveal visible mx-auto max-w-[1400px]">
           <div className="mb-16 text-center">
@@ -322,7 +326,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="contact" className="bg-white px-6 py-24 lg:px-8">
+      <section id="contact" className="deferred-section bg-white px-6 py-24 lg:px-8">
         <div className="scroll-reveal visible mx-auto max-w-[1400px]">
           <div className="mb-16 text-center">
             <h2 className="section-heading inline-block">Contact Us</h2>
@@ -395,19 +399,11 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="mt-16 overflow-hidden rounded-2xl border-2 border-[rgba(212,175,55,0.2)] shadow-[0_4px_20px_rgba(30,58,95,0.08)]">
-            <iframe
-              title="Elite Legal Consultancy Location"
-              src="https://www.google.com/maps?q=3rd%20Floor,%20Treasury%20Square,%20Aizawl,%20Mizoram,%20Opposite%20Congress%20Bhawan&z=16&output=embed"
-              className="h-[450px] w-full border-0"
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            />
-          </div>
+          <MapEmbed />
         </div>
       </section>
 
-      <footer className="bg-[color:var(--navy-dark)] px-6 pb-8 pt-16 text-white lg:px-8">
+      <footer className="deferred-section bg-[color:var(--navy-dark)] px-6 pb-8 pt-16 text-white lg:px-8">
         <div className="mx-auto max-w-[1400px]">
           <div className="grid gap-10 lg:grid-cols-[2fr_1fr_1fr]">
             <div>
